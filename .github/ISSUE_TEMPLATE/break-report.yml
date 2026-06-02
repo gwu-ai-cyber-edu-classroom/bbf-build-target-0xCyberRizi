@@ -1,0 +1,90 @@
+name: BBF Break Report
+description: Submit a break against this team's artifact.
+title: "[BREAK] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to report a break against this team's artifact. **All six fields below are required.**
+
+        After filing, notify the team in the institute Slack/Discord within 5 minutes (or just `@-mention` the team here). A member of this team will try to reproduce and comment `/repro-confirmed` or `/repro-failed`.
+
+  - type: input
+    id: target_artifact
+    attributes:
+      label: Target artifact
+      description: Which file, command, or running service did you attack?
+      placeholder: e.g., the CLI command, the /notes endpoint, the rendered page
+    validations:
+      required: true
+
+  - type: dropdown
+    id: attack_class
+    attributes:
+      label: Attack class
+      description: Pick the closest category.
+      options:
+        - leakage
+        - input-validation
+        - command-injection
+        - sql-injection
+        - path-traversal
+        - template-injection
+        - xss
+        - idor-authz
+        - ssrf
+        - open-redirect
+        - dos-resource-exhaustion
+        - data-poisoning
+        - policy-bypass
+        - prompt-injection
+        - jailbreak
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: property_violated
+    attributes:
+      label: Property violated
+      description: Quote the property from SPEC.md verbatim (e.g., "P1: Confidentiality").
+      placeholder: P1, P2, P3, P4, or P5 from SPEC.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Numbered, copy-pasteable. The targeted team must be able to reproduce from inputs alone (no editing the artifact).
+      placeholder: |
+        1. Start the artifact per its README.
+        2. Send the following input verbatim: ...
+        3. Observe the output.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Transcript, output, screenshot path, or diff that proves the break occurred.
+      placeholder: |
+        ```
+        > input: ...
+        < output: ... <-- contains CANARY_alpha
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity (self-rated)
+      description: Low = minor violation. Medium = reliable violation of a core property. High = complete bypass.
+      options:
+        - low
+        - medium
+        - high
+    validations:
+      required: true

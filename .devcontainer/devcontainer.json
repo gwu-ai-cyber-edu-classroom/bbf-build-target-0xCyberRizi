@@ -1,0 +1,43 @@
+{
+  "name": "BBF Build Target",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+  // Lean, content-independent provisioning (Claude Code CLI) so first launch stays
+  // fast. Python and Node come from the image + features above. LaTeX is NOT baked
+  // in (large, and only the LaTeX/PDF target needs it) — that team runs
+  // `bash .devcontainer/install-latex.sh` on demand.
+  "onCreateCommand": "bash .devcontainer/setup.sh",
+  // Per-target Python dependencies; re-runs whenever the repo content changes.
+  "postCreateCommand": "if [ -f requirements.txt ]; then pip install --user -r requirements.txt; fi",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin"
+  },
+  // Common dev-server ports across the menu: Express (3000), Astro (4321),
+  // Flask (5000), Vite/React (5173), FastAPI/uvicorn & plain HTTP (8000), web (8080).
+  "forwardPorts": [3000, 4321, 5000, 5173, 8000, 8080],
+  "portsAttributes": {
+    "3000": { "label": "node / express" },
+    "4321": { "label": "astro" },
+    "5000": { "label": "flask" },
+    "5173": { "label": "vite / react" },
+    "8000": { "label": "fastapi / http" },
+    "8080": { "label": "web" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "James-Yu.latex-workshop",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github"
+      ]
+    }
+  }
+}

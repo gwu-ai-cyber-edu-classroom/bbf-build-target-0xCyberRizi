@@ -1,0 +1,25 @@
+name: build-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build-check dependency
+        # build_check.py only inspects files, so the gate needs pytest only —
+        # not your target's runtime deps. This keeps the check green for Python,
+        # Node, and LaTeX targets alike.
+        run: pip install pytest
+      - name: Run build_check.py
+        run: pytest tests/build_check.py -v
